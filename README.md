@@ -26,6 +26,7 @@ apt install -y curl nvme-cli aria2 jq parted ufw
 ```
 
 # Monad Deposunu Ekle
+```
 cat <<EOF > /etc/apt/sources.list.d/category-labs.sources
 Types: deb
 URIs: https://pkg.category.xyz/
@@ -33,15 +34,20 @@ Suites: noble
 Components: main
 Signed-By: /etc/apt/keyrings/category-labs.gpg
 EOF
+```
 
 # GPG Anahtarını Ekle
+```
 curl -fsSL https://pkg.category.xyz/keys/public-key.asc \
   | gpg --dearmor --yes -o /etc/apt/keyrings/category-labs.gpg
+```
 
 # Monad Paketini Kur
+```
 apt update
 apt install -y monad
 apt-mark hold monad
+```
 
 # Monad Kullanıcısını ve Klasörleri Oluştur
 useradd -m -s /bin/bash monad
