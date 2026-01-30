@@ -20,8 +20,7 @@ Sistemi güncelleyin ve gerekli araçları kurun:
 Bash
 
 # Sistemi güncelle
-```apt update && apt upgrade -y```
-```apt install -y curl nvme-cli aria2 jq parted ufw```
+```apt update && apt upgrade -y apt install -y curl nvme-cli aria2 jq parted ufw```
 
 # Monad Deposunu Ekle
 cat <<EOF > /etc/apt/sources.list.d/category-labs.sources
