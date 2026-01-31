@@ -1,4 +1,5 @@
-#Monad Testnet Full Node Setup Guide (NVMe Optimized)
+Monad Testnet Full Node Setup Guide (NVMe Optimized)
+
 📘 Monad Testnet Full Node Setup Guide
 This guide covers the installation steps for a Monad Testnet Full Node on Ubuntu 24.04, optimized for high-performance NVMe SSDs (specifically configured for TrieDB).
 
