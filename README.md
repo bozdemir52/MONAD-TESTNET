@@ -1,11 +1,11 @@
-##Monad Testnet Full Node Setup Guide (NVMe Optimized)
+## Monad Testnet Full Node Setup Guide (NVMe Optimized)
 
-##📘 Monad Testnet Full Node Setup Guide
+## 📘 Monad Testnet Full Node Setup Guide
 This guide covers the installation steps for a Monad Testnet Full Node on Ubuntu 24.04, optimized for high-performance NVMe SSDs (specifically configured for TrieDB).
 
 Note: This guide assumes the TrieDB disk path is /dev/nvme1n1. Please adjust the path according to your own server configuration.
 
-##🛠️ System Requirements
+## 🛠️ System Requirements
 
 OS: Ubuntu 24.04 LTS
 
@@ -17,7 +17,7 @@ Storage: High-speed NVMe SSD (Dedicated drive/partition for TrieDB is highly rec
 
 Network: 1 Gbps+ (100 Mbps upload minimum)
 
-##🚀 Step 1: Preparation & Dependencies
+## 🚀 Step 1: Preparation & Dependencies
 Update the system and install necessary tools:
 
 ## Update System
@@ -59,7 +59,7 @@ mkdir -p /home/monad/monad-bft/config \
          /home/monad/monad-bft/config/validators
 ```
 
-##💾 Step 2: Disk Configuration (TrieDB)
+## 💾 Step 2: Disk Configuration (TrieDB)
 Optimizing the NVMe drive for Monad's high-throughput requirements. (Replace /dev/nvme1n1 with your actual disk path)
 
 ## Define Disk Variable
@@ -93,7 +93,7 @@ udevadm settle
 systemctl start monad-mpt
 ```
 
-##⚙️ Step 3: Configuration & Keys
+## ⚙️ Step 3: Configuration & Keys
 Download testnet configs and generate node identity.
 
 ## Download Config Files
@@ -126,7 +126,7 @@ grep "public key" /opt/monad/backup/secp-backup /opt/monad/backup/bls-backup | t
 EOF
 ```
 
-##📝 Step 4: Node Identity & Peer Discovery
+## 📝 Step 4: Node Identity & Peer Discovery
 Set your node name and generate the network signature.
 
 1. Set Node Name: Replace YOUR_MONIKER with your desired node name.
@@ -143,7 +143,7 @@ monad-sign-name-record \
   --self-record-seq-num 0
 ```
 
-##🔥 Step 5: Launch & Security
+## 🔥 Step 5: Launch & Security
 Finalize permissions and start services.
 
 ## Fix Ownership
@@ -165,7 +165,7 @@ systemctl enable monad-bft monad-execution monad-rpc
 systemctl start monad-bft monad-execution monad-rpc
 ```
 
-##📊 Monitoring
+## 📊 Monitoring
 You can use the community status script to check sync status.
 
 ## Install Status Tool
