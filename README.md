@@ -1,11 +1,11 @@
-Monad Testnet Full Node Setup Guide (NVMe Optimized)
+#Monad Testnet Full Node Setup Guide (NVMe Optimized)
 
-📘 Monad Testnet Full Node Setup Guide
+#📘 Monad Testnet Full Node Setup Guide
 This guide covers the installation steps for a Monad Testnet Full Node on Ubuntu 24.04, optimized for high-performance NVMe SSDs (specifically configured for TrieDB).
 
 Note: This guide assumes the TrieDB disk path is /dev/nvme1n1. Please adjust the path according to your own server configuration.
 
-🛠️ System Requirements
+#🛠️ System Requirements
 OS: Ubuntu 24.04 LTS
 
 CPU: 16 Core+ (Recommended)
@@ -16,16 +16,17 @@ Storage: High-speed NVMe SSD (Dedicated drive/partition for TrieDB is highly rec
 
 Network: 1 Gbps+ (100 Mbps upload minimum)
 
-🚀 Step 1: Preparation & Dependencies
+#🚀 Step 1: Preparation & Dependencies
 Update the system and install necessary tools:
 
-Bash
-
-# Update System
+## Update System
+```bash
 apt update && apt upgrade -y
 apt install -y curl nvme-cli aria2 jq parted ufw
+```
 
-# Add Monad Repository
+## Add Monad Repository
+```bash
 cat <<EOF > /etc/apt/sources.list.d/category-labs.sources
 Types: deb
 URIs: https://pkg.category.xyz/
@@ -33,66 +34,87 @@ Suites: noble
 Components: main
 Signed-By: /etc/apt/keyrings/category-labs.gpg
 EOF
+```
 
-# Add GPG Key
+## Add GPG Key
+```bash
 curl -fsSL https://pkg.category.xyz/keys/public-key.asc \
   | gpg --dearmor --yes -o /etc/apt/keyrings/category-labs.gpg
+```
 
-# Install Monad Package
+## Install Monad Package
+```bash
 apt update
 apt install -y monad
 apt-mark hold monad
+```
 
-# Create User and Directories
+## Create User and Directories
+```bash
 useradd -m -s /bin/bash monad
 mkdir -p /home/monad/monad-bft/config \
          /home/monad/monad-bft/ledger \
          /home/monad/monad-bft/config/forkpoint \
          /home/monad/monad-bft/config/validators
-💾 Step 2: Disk Configuration (TrieDB)
+```
+
+#💾 Step 2: Disk Configuration (TrieDB)
 Optimizing the NVMe drive for Monad's high-throughput requirements. (Replace /dev/nvme1n1 with your actual disk path)
 
-Bash
-
-# Define Disk Variable
+## Define Disk Variable
+```bash
 export TRIEDB_DRIVE=/dev/nvme1n1
+```
 
-# Partition the Disk (GPT & 100% Usage)
+## Partition the Disk (GPT & 100% Usage)
+```bash
 parted -s $TRIEDB_DRIVE mklabel gpt
 parted -s $TRIEDB_DRIVE mkpart triedb 0% 100%
+```
 
-# Set Permissions (Udev Rule)
+## Set Permissions (Udev Rule)
+```bash
 PARTUUID=$(lsblk -o PARTUUID $TRIEDB_DRIVE | tail -n 1)
 
 echo "ENV{ID_PART_ENTRY_UUID}==\"$PARTUUID\", MODE=\"0666\", SYMLINK+=\"triedb\"" \
   | tee /etc/udev/rules.d/99-triedb.rules
+```
 
-# Apply Rules
+## Apply Rules
+```bash
 udevadm trigger
 udevadm control --reload
 udevadm settle
+```
 
-# Start Database Service
+## Start Database Service
+```bash
 systemctl start monad-mpt
-⚙️ Step 3: Configuration & Keys
+```
+
+#⚙️ Step 3: Configuration & Keys
 Download testnet configs and generate node identity.
 
-Bash
-
-# Download Config Files
+## Download Config Files
+```bash
 MF_BUCKET=https://bucket.monadinfra.com
 curl -o /home/monad/.env $MF_BUCKET/config/testnet/latest/.env.example
 curl -o /home/monad/monad-bft/config/node.toml $MF_BUCKET/config/testnet/latest/full-node-node.toml
+```
 
-# Generate Password
+## Generate Password
+```bash
 sed -i "s|^KEYSTORE_PASSWORD=$|KEYSTORE_PASSWORD='$(openssl rand -base64 32)'|" /home/monad/.env
 source /home/monad/.env
+```
 
-# Backup Password (IMPORTANT)
+## Backup Password (IMPORTANT)
+```bash
 mkdir -p /opt/monad/backup/
 echo "Keystore password: ${KEYSTORE_PASSWORD}" > /opt/monad/backup/keystore-password-backup
-
-# Create Keys (SECP & BLS)
+```
+## Create Keys (SECP & BLS)
+```bash
 bash <<'EOF'
 set -e
 source /home/monad/.env
@@ -101,54 +123,63 @@ monad-keystore create --key-type bls --keystore-path /home/monad/monad-bft/confi
 # Display Public Address
 grep "public key" /opt/monad/backup/secp-backup /opt/monad/backup/bls-backup | tee /home/monad/pubkey-secp-bls
 EOF
-📝 Step 4: Node Identity & Peer Discovery
+```
+
+#📝 Step 4: Node Identity & Peer Discovery
 Set your node name and generate the network signature.
 
 1. Set Node Name: Replace YOUR_MONIKER with your desired node name.
-
-Bash
-
+```bash
 sed -i 's/node_name = .*/node_name = "YOUR_MONIKER"/' /home/monad/monad-bft/config/node.toml
+```
 2. Generate Signature: Run the following command and add the output to node.toml under [peer_discovery].
-
-Bash
-
+```bash
 source /home/monad/.env
 monad-sign-name-record \
   --address $(curl -s4 ifconfig.me):8000 \
   --keystore-path /home/monad/monad-bft/config/id-secp \
   --password "${KEYSTORE_PASSWORD}" \
   --self-record-seq-num 0
-🔥 Step 5: Launch & Security
+```
+
+#🔥 Step 5: Launch & Security
 Finalize permissions and start services.
 
-Bash
-
-# Fix Ownership
+## Fix Ownership
+```bash
 chown -R monad:monad /home/monad/
+```
 
-# Configure Firewall (UFW)
+## Configure Firewall (UFW)
+```bash
 ufw allow ssh
 ufw allow 8000/tcp
 ufw allow 8000/udp
 ufw --force enable
+```
 
-# Enable & Start Services
+## Enable & Start Services
+```bash
 systemctl enable monad-bft monad-execution monad-rpc
 systemctl start monad-bft monad-execution monad-rpc
-📊 Monitoring
+```
+
+#📊 Monitoring
 You can use the community status script to check sync status.
 
-Bash
-
-# Install Status Tool
+## Install Status Tool
+```bash
 curl -sSL https://bucket.monadinfra.com/scripts/monad-status.sh -o /usr/local/bin/monad-status && chmod +x /usr/local/bin/monad-status
+```
 
-# Check Status
+## Check Status
+```bash
 monad-status
+```
 
-# View Logs
+## View Logs
+```bash
 journalctl -u monad-bft -f
-Author: Bahadır Özdemir
+```
 
-GitHub: bozdemir52
+
