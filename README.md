@@ -1,7 +1,7 @@
-## Monad Testnet Node Setup Guide (High-Performance & NVMe Optimized)
-# This guide covers the advanced installation steps for a Monad Testnet Node on Ubuntu 24.04. It is strictly optimized for high-performance NVMe SSDs (TrieDB) and includes OS-level CPU & Network optimizations to prevent sync lags and missed blocks.
+## Monad Testnet Node Setup Guide (High Performance & NVMe Optimized)
+#This guide covers the advanced installation steps for a Monad Testnet Node on Ubuntu 24.04. It is strictly optimized for high performance NVMe SSDs (TrieDB) and includes OS-level CPU & Network optimizations to prevent sync lags and missed blocks.
 
-# Note: This guide assumes the TrieDB disk path is /dev/nvme1n1. Please adjust the path according to your own server configuration (lsblk).
+#Note: This guide assumes the TrieDB disk path is /dev/nvme1n1. Please adjust the path according to your own server configuration (lsblk).
 
 🛠️ System Requirements
 OS: Ubuntu 24.04 LTS
