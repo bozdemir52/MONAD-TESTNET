@@ -1,12 +1,12 @@
-#📘 Monad Testnet Full Node Kurulum Rehberi
-Bu rehber, Ubuntu 24.04 üzerinde ve yüksek performanslı NVMe SSD (TrieDB) kullanarak Monad Testnet Full Node kurulum adımlarını içerir.
+# 📘 Monad Testnet Node Kurulum Rehberi
+Bu rehber, Ubuntu 24.04 üzerinde ve yüksek performanslı NVMe SSD (TrieDB) kullanarak Monad Testnet Node kurulum adımlarını içerir.
 
 Not: Bu rehberde disk yolu /dev/nvme1n1 olarak baz alınmıştır. Kendi sunucunuzdaki disk yapısına göre bu yolu güncellemelisiniz.
 
-🛠️ Sistem Gereksinimleri
+## 🛠️ Sistem Gereksinimleri
 OS: Ubuntu 24.04 LTS
 
-CPU: 16 Core+ (Önerilen)
+CPU: 16 Core+ (Önerilen) min 4.5GHz
 
 RAM: 32 GB+
 
