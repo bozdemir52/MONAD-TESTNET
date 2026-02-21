@@ -6,7 +6,7 @@ Note: This guide assumes the TrieDB disk path is /dev/nvme1n1. Please adjust the
 ## 🛠️ System Requirements
 OS: Ubuntu 24.04 LTS
 
-CPU: 16 Core+ (Physical cores preferred over logical threads)
+CPU: 16 Core+ (Physical cores preferred over logical threads) min 4.5GHz
 
 RAM: 32 GB+
 
