@@ -1,7 +1,7 @@
-** Monad Mainnet/Testnet Node Kurulum & Optimizasyon Rehberi
+## Monad Mainnet/Testnet Node Kurulum & Optimizasyon Rehberi
 Bu rehber, Ubuntu 24.04 üzerinde yüksek performanslı NVMe SSD (TrieDB) kullanarak Monad Node kurulum adımlarını ve sistem optimizasyonlarını içerir.
 
-🛠️ Sistem Gereksinimleri
+# 🛠️ Sistem Gereksinimleri
 OS: Ubuntu 24.04 LTS (Kernel v6.8.0.60+ Şarttır)
 
 CPU: 16 Core+ (4.5GHz+ frekans önerilir)
@@ -15,8 +15,7 @@ Network: 1 Gbps+ (Saniyede 70.000 PPS kapasiteli)
 🚨 ADIM 0: Kritik Sistem Kontrolü (Ölümcül Kernel Hatası)
 Linux kernel sürümleri v6.8.0.56 ile v6.8.0.59 arasında Monad node'unu kilitleyen bir hata barındırır. Kuruluma başlamadan önce kontrol edin:
 
-Bash
-```
+```Bash
 uname -r
 ```
 Eğer sürümünüz 56, 57, 58 veya 59 ise, kuruluma devam etmeden önce sistemi güncelleyip yeniden başlatın:
