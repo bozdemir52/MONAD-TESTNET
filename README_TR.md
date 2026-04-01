@@ -51,19 +51,20 @@ sudo apt-mark hold monad
 sudo useradd -m -s /bin/bash monad
 sudo mkdir -p /home/monad/monad-bft/config /home/monad/monad-bft/ledger /home/monad/monad-bft/config/forkpoint /home/monad/monad-bft/config/validators
 ```
-⚙️ ADIM 2: Donanım Optimizasyonu (CPU & Performans)
+# ⚙️ ADIM 2: Donanım Optimizasyonu (CPU & Performans)
 Monad'ın gecikmesiz çalışması için işlemciyi enerji tasarrufu modundan çıkarıp "Performans" moduna alıyoruz:
 
-Bash
+```Bash
 # İşlemciyi maksimum performans moduna sabitleyin
 sudo cpupower frequency-set -g performance
 
 # Kontrol (Governor kısmında "performance" yazmalıdır)
 cpupower frequency-info | grep "current policy"
-💾 ADIM 3: Disk Yapılandırması (TrieDB - Bağımsız NVMe)
+```
+# 💾 ADIM 3: Disk Yapılandırması (TrieDB - Bağımsız NVMe)
 Önemli: Sunucunuzda disklerin RAID yapılmadığından emin olun. TrieDB için ayrı bir fiziksel disk (/dev/nvme1n1) kullanacağız.
 
-Bash
+```Bash
 # Disk Değişkenini Tanımla (Kendi diskinize göre kontrol edin: lsblk)
 export TRIEDB_DRIVE=/dev/nvme1n1
 
@@ -82,8 +83,9 @@ sudo udevadm settle
 
 # TrieDB Servisini Başlat
 sudo systemctl start monad-mpt
-🔑 ADIM 4: Yapılandırma ve Cüzdan Oluşturma
-Bash
+```
+# 🔑 ADIM 4: Yapılandırma ve Cüzdan Oluşturma
+```Bash
 # Yapılandırma dosyalarını çekin
 MF_BUCKET=https://bucket.monadinfra.com
 curl -o /home/monad/.env $MF_BUCKET/config/testnet/latest/.env.example
@@ -98,10 +100,11 @@ echo "Keystore password: ${KEYSTORE_PASSWORD}" > /opt/monad/backup/keystore-pass
 # Keystore (Cüzdan) Oluşturma
 monad-keystore create --key-type secp --keystore-path /home/monad/monad-bft/config/id-secp --password "${KEYSTORE_PASSWORD}" > /opt/monad/backup/secp-backup
 monad-keystore create --key-type bls --keystore-path /home/monad/monad-bft/config/id-bls --password "${KEYSTORE_PASSWORD}" > /opt/monad/backup/bls-backup
-🛡️ ADIM 5: Firewall ve Ağ Ayarları (RaptorCast Uyarısı)
+```
+# 🛡️ ADIM 5: Firewall ve Ağ Ayarları (RaptorCast Uyarısı)
 ⚠️ DİKKAT: Monad saniyede ~70.000 paket (PPS) trafik üretir. Sunucu sağlayıcınızın (Hetzner, Latitude vb.) dış panelindeki DDoS korumalarını kapatın veya en esnek hale getirin.
 
-Bash
+```Bash
 # SSH ve Monad Portlarına izin ver
 sudo ufw allow ssh
 sudo ufw allow 8000/tcp
@@ -114,14 +117,16 @@ sudo chown -R monad:monad /home/monad/
 # Servisleri Başlat
 sudo systemctl enable monad-bft monad-execution monad-rpc
 sudo systemctl start monad-bft monad-execution monad-rpc
-📊 İzleme
+```
+# 📊 İzleme
 Node durumunu kontrol etmek için:
 
-Bash
+```Bash
 # Logları izle
 journalctl -u monad-bft -f
 
 # Resmi durum scripti
 curl -sSL https://bucket.monadinfra.com/scripts/monad-status.sh -o /usr/local/bin/monad-status && chmod +x /usr/local/bin/monad-status
 monad-status
+```
 ⚠️ Hatırlatma: /opt/monad/backup/ klasöründeki tüm dosyaları mutlaka bilgisayarınıza veya güvenli bir yere yedekleyin. Bu dosyalar node'unuzun kimliğidir.
