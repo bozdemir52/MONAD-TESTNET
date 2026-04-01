@@ -20,13 +20,14 @@ uname -r
 ```
 Eğer sürümünüz 56, 57, 58 veya 59 ise, kuruluma devam etmeden önce sistemi güncelleyip yeniden başlatın:
 
-Bash
+```Bash
 sudo apt update && sudo apt upgrade -y
 sudo reboot
+```
 (Yeniden açıldığında sürümün v6.8.0.60 veya üstü olduğunu teyit edin.)
 
-🚀 ADIM 1: Temel Paketler ve Hazırlık
-Bash
+# 🚀 ADIM 1: Temel Paketler ve Hazırlık
+```Bash
 # Sistem araçlarını kurun
 sudo apt install -y curl nvme-cli aria2 jq parted ufw linux-tools-common linux-tools-$(uname -r)
 
@@ -49,6 +50,7 @@ sudo apt-mark hold monad
 # Kullanıcı ve Klasör Yapısı
 sudo useradd -m -s /bin/bash monad
 sudo mkdir -p /home/monad/monad-bft/config /home/monad/monad-bft/ledger /home/monad/monad-bft/config/forkpoint /home/monad/monad-bft/config/validators
+```
 ⚙️ ADIM 2: Donanım Optimizasyonu (CPU & Performans)
 Monad'ın gecikmesiz çalışması için işlemciyi enerji tasarrufu modundan çıkarıp "Performans" moduna alıyoruz:
 
