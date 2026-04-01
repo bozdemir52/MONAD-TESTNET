@@ -1,4 +1,4 @@
-##Monad Mainnet/Testnet Node Setup & Optimization Guide
+## Monad Mainnet/Testnet Node Setup & Optimization Guide
 This guide covers the installation steps and system optimizations for a Monad Node on Ubuntu 24.04 using a high-performance NVMe SSD (TrieDB).
 
 #🛠️ System Requirements
