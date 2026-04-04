@@ -129,3 +129,42 @@ journalctl -u monad-bft -f
 curl -sSL https://bucket.monadinfra.com/scripts/monad-status.sh -o /usr/local/bin/monad-status && chmod +x /usr/local/bin/monad-status
 monad-status
 ```
+## 🔄 Troubleshooting: Manual Soft Reset (Sync Issues)
+
+A soft reset is highly recommended if your node is out of sync, the `blockDifference` keeps increasing, or `statesync` is permanently stuck at `0.0000%`. 
+
+This process fetches the latest `forkpoint` and `validators` from the network, allowing your node to skip ahead and sync instantly without losing your keys or wiping your database.
+
+**1. Stop Monad Services**
+First, stop the running services to safely update the configuration files.
+```bash
+sudo systemctl stop monad-bft monad-execution monad-rpc
+```
+2. Fetch the Latest Testnet Configurations
+Run the following block to download the latest forkpoint.toml and validators.toml files from the official Monad infrastructure bucket.
+
+```Bash
+MF_BUCKET=[https://bucket.monadinfra.com](https://bucket.monadinfra.com)
+VALIDATORS_FILE=/home/monad/monad-bft/config/validators/validators.toml
+
+curl -sSL $MF_BUCKET/scripts/testnet/download-forkpoint.sh | sudo bash
+sudo curl $MF_BUCKET/validators/testnet/validators.toml -o $VALIDATORS_FILE
+sudo chown monad:monad $VALIDATORS_FILE
+```
+3. Restart Monad Services
+Once the fresh configuration files are in place, start the services again.
+
+```Bash
+sudo systemctl start monad-bft monad-execution monad-rpc
+```
+4. Verify Node Status
+Check if all systemd services are actively running:
+
+```Bash
+sudo systemctl list-units --type=service monad-bft.service monad-execution.service monad-rpc.service
+```
+Finally, monitor your node's status. It might take a minute, but your node should transition to status: in-sync and blockDifference: 0.
+
+```Bash
+watch -n 2 monad-status
+```
